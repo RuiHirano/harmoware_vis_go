@@ -28,7 +28,7 @@ func main() {
 
 	agents := createMockAgents(100)
 	hvg := hv.NewHarmowareVisGo()
-	go hvg.RunServer("localhost:4000")
+	go hvg.RunServer("localhost:5000")
 	
 	time.Sleep(3*time.Second)
 	log.Printf("send agents")
