@@ -1,6 +1,8 @@
 package harmwoware_vis_go
 
 import (
+	"encoding/json"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -10,12 +12,12 @@ import (
 )
 
 type HarmowareVisGo struct{
-
+	IOServer *gosocketio.Server
 }
 
 func NewHarmowareVisGo() *HarmowareVisGo {
     return &HarmowareVisGo{
-
+		IOServer: nil,
 	}
 }
 
@@ -25,6 +27,8 @@ func (hv *HarmowareVisGo) RunServer(address string) {
 	if ioserv == nil {
 		os.Exit(1)
 	}
+	hv.IOServer = ioserv
+
 	serveMux := http.NewServeMux()
 	serveMux.Handle("/socket.io/", ioserv)
 	serveMux.HandleFunc("/", hv.assetsFileHandler)
@@ -91,4 +95,30 @@ func (hv *HarmowareVisGo) getAssetsDir() http.Dir{
 
 	assetsDir := http.Dir(d)
 	return assetsDir
+}
+
+type AgentType int32
+const (
+	AgentType_PERSON                AgentType = 0
+	AgentType_CAR               AgentType = 1
+)
+
+type Agent struct {
+	Type AgentType
+	ID string
+	Latitude float64
+	Longitude float64
+}
+
+func (hv *HarmowareVisGo) SendAgents(agents []*Agent) error{
+	if hv.IOServer == nil{
+		return fmt.Errorf("Error: server is not running")
+	}
+	
+	jsonAgents, err := json.Marshal(agents)
+	if err != nil {
+		return err
+	}
+	hv.IOServer.BroadcastToAll("agents", jsonAgents)
+	return nil
 }
