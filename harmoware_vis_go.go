@@ -86,7 +86,8 @@ func (hv *HarmowareVisGo) getAssetsDir() http.Dir{
 	if err != nil {
 		log.Fatal(err)
 	}*/
-	d := filepath.Join("/Users/ruihirano/go/src/github.com/RuiHirano/harmoware_vis_go/build")
+	gopath := os.Getenv("GOPATH")
+	d := filepath.Join(gopath + "/src/github.com/RuiHirano/harmoware_vis_go/build")
 
 	assetsDir := http.Dir(d)
 	return assetsDir
