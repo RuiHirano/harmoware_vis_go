@@ -82,10 +82,10 @@ func (hv *HarmowareVisGo) assetsFileHandler(w http.ResponseWriter, r *http.Reque
 	http.ServeContent(w, r, file, fi.ModTime(), f)
 }
 func (hv *HarmowareVisGo) getAssetsDir() http.Dir{
-	currentRoot, err := os.Getwd()
+	/*currentRoot, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
-	}
+	}*/
 	d := filepath.Join("/Users/ruihirano/go/src/github.com/RuiHirano/harmoware_vis_go/build")
 
 	assetsDir := http.Dir(d)
